@@ -1,0 +1,230 @@
+<div class="container">
+  <div class="content shadow-sm p-3 mb-3 bg-body rounded">
+    <div
+      class="d-flex"
+      style="align-items: center; justify-content: center; padding-bottom: 30px"
+    >
+      <div style="margin-right: auto; margin-left: auto">
+        <div #container style="text-align: center">
+          <ng-image-slider
+            style="text-align: center; margin-left: 25%"
+            [images]="imageObjectPreview"
+            [showArrow]="false"
+            [arrowKeyMove]="false"
+            #nav2
+          >
+          </ng-image-slider>
+        </div>
+        <div
+          style="
+            width: 430px;
+            height: 100px;
+            text-align: center;
+            margin-bottom: 100px;
+            padding: 10px;
+          "
+        >
+          <ng-image-slider
+            #nav
+            [images]="imageObject"
+            [imagePopup]="false"
+            [infinite]="false"
+            [autoSlide]="1"
+            [imageSize]="{ space: 3, height: '100px' }"
+            slideImage="1"
+            (imageClick)="imageClickHandler($event)"
+          ></ng-image-slider>
+        </div>
+      </div>
+
+      <!-- Product details -->
+      <div class="col-6 shadow-sm p-3 bg-body rounded" *ngIf="bookTitle">
+        <div class="product-details">
+          <h2 class="product-name">{{ bookTitle.title }}</h2>
+          <hr style="margin: 5px" />
+
+          <div>
+            <p class="product-info" style="margin-top: 20px">
+              Tác giả: {{ bookTitle.author }}
+            </p>
+            <p class="product-info">Nhà xuất bản: {{ bookTitle.publisher }}</p>
+            <p class="product-info">
+              Năm xuất bản: {{ bookTitle.createdYear }}
+            </p>
+            <p class="product-info">Số trang: {{ bookTitle.pages }}</p>
+            <p class="product-price">
+              Giá trị:
+              {{ bookTitle.price | currencySuffix : "VND" : "" : "1.0-0" }}
+            </p>
+          </div>
+
+          <ul class="d-flex category-book">
+            <li style="margin-right: 5px">Thể loại:</li>
+            <div
+              *ngFor="let item of bookTitle.genres; let last = last"
+              type="buton"
+            >
+              <li>
+                <a style="cursor: pointer" (click)="navigateToHome(item)"
+                  >{{ item.genre_name }}{{ !last ? " , " : "" }}&nbsp;</a
+                >
+              </li>
+            </div>
+          </ul>
+
+          <hr />
+
+          <div class="add-to-cart d-flex">
+            <div class="action-book" (click)="addBookToWaitList()">
+              <a type="button">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/6130/6130950.png"
+                  alt=""
+                  class="img-action"
+                />
+                Nhận thông báo
+              </a>
+            </div>
+            <div
+              class="action-book"
+              type="button"
+              (click)="addBookToCart()"
+              [ngClass]="{
+                'disabled-link': bookTitle && bookTitle.status === '0'
+              }"
+            >
+              <a>
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/7361/7361890.png"
+                  alt=""
+                  class="img-action"
+                />
+                Thêm vào giỏ hàng
+              </a>
+            </div>
+            <div
+              class="action-book"
+              type="button"
+              (click)="borrow()"
+              [ngClass]="{
+                'disabled-link': bookTitle && bookTitle.status === '0'
+              }"
+            >
+              <a>
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/5328/5328095.png"
+                  alt=""
+                  class="img-action"
+                />
+                Mượn ngay
+              </a>
+            </div>
+          </div>
+
+          <div class="add-to-cart d-flex" *ngIf="bookTitle.ebook === 1">
+            <div class="action-book" (click)="onDownloadFile()">
+              <a type="button">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/9153/9153957.png"
+                  alt=""
+                  class="img-action"
+                />
+                Tải sách
+              </a>
+            </div>
+
+            <div class="action-book" (click)="showBookOnline($event)">
+              <a type="button">
+                <img
+                  src="https://cdn-icons-png.flaticon.com/128/9153/9153957.png"
+                  alt=""
+                  class="img-action"
+                />
+                Đọc online
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; min-width: 100%">
+    <div class="des-book col-12 shadow p-3 bg-body rounded" *ngIf="bookTitle">
+      <ckeditor
+        class="form-control ck-editor"
+        name="description"
+        id="editor"
+        [(ngModel)]="bookTitle.description"
+        class="description"
+        style="max-width: 580px"
+        [editor]="Editor"
+        [disabled]="true"
+        [config]="editorConfig"
+      ></ckeditor>
+    </div>
+
+    <!-- <div
+      style="margin-left: 5%"
+      class="des-book col-12 shadow p-3 bg-body rounded"
+    >
+      <ckeditor
+        class="form-control"
+        (ready)="onReady($event)"
+        name="comment"
+        id="comment"
+        [(ngModel)]="comment"
+        class="description"
+        style="max-width: 580px; height: 1000px"
+        [editor]="EditorComment"
+        data=""
+        [config]="editorConfigComment"
+      ></ckeditor>
+    </div> -->
+
+    <!-- <iframe [src]="urlPreview" type="application/pdf"></iframe> -->
+  </div>
+
+  <div style="min-width: 100%">
+    <h2>Đánh giá sản phẩm</h2>
+    <div
+      class="des-book col-12 shadow p-3 bg-body rounded"
+      style="margin-top: 5%"
+    >
+      <div class="info-user" style="display: flex">
+        <a type="button" class="wait_link">
+          <img
+            src="https://cdn-icons-png.flaticon.com/128/3058/3058953.png"
+            alt=""
+            class="img-item"
+          />
+        </a>
+        <div style="width: 300px; margin-left: 5%; font-size: 10px">
+          <div>
+            <p class="info">Lee thij Nga</p>
+          </div>
+          <p class="info" style="margin-top: 0px">Email: Le thi nga</p>
+        </div>
+      </div>
+      <div class="comment" style="margin-left: 13%">
+        40k cho 1 cuốn sách quá tuyệt vời Sách mới tinh ko hề trầy xước hay bị
+        cũ 10 điểm cho cách gói và giao hàng của tiki Mình nhận thấy tiki đã cải
+        thiện loại bìa gói hàng ko bị mềm như trc nữa cũng nhờ vậy mà gói hàng
+        rất vuông vắn đảm bảo chất lượng sách đến tay người dùng Nội dung sách
+        mn lên mạng xem rv nha Ko hối hận đâu ❤️Tiki
+      </div>
+
+      <div style="margin-left: 12%">
+        <ng-image-slider
+          #nav
+          [images]="imageObject"
+          [infinite]="false"
+          [autoSlide]="1"
+          [imageSize]="{ space: 10, height: 80, width: 80 }"
+          slideImage="1"
+          class="custom-image-comment"
+        ></ng-image-slider>
+      </div>
+    </div>
+  </div>
+</div>

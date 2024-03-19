@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.a2m.back.dao.user.book.User0105DAO">
+	<select id="getAllByBookCode" parameterType="String" resultType="com.a2m.back.model.resp.EvaluationResponse">
+	select EVALUATE_ID as evaluate_id,
+	SACHMUON_ID as sachmuon_id,
+	DATE_EVALUATE AS date_evaluate,
+	STAR as star,
+	CONTENT as content,
+	USER_UID as user_uid
+	FROM DANHGIA  as dg
+	JOIN SACHMUON as sm
+	ON dg.SACHMUON_ID = sm.SACHMUON_ID
+	JOIN SACH AS s
+	ON s.BOOK_ID = sm.BOOK_ID
+	JOIN DAUSACH as ds
+	ON ds.BOOK_CODE = s.BOOK_CODE
+	where ds.BOOK_CODE = #{bookCode};
+	</select>
+	
+	<insert id="insert" parameterType="com.a2m.back.model.user.book.EvaluationDto" useGeneratedKeys="true" keyProperty="evaluate_id">
+	insert into  DANHGIA(SACHMUON_ID, USER_UID, CONTENT, DATE_EVALUATE, STAR)
+	values  (#{sachmuon_id},
+	#{user_uid},
+	#{content},
+	now(),
+	#{star});
+	</insert>
+</mapper>

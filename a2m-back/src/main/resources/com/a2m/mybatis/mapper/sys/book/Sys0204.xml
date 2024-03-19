@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.a2m.back.dao.sys.book.Sys0204DAO">
+
+	<!-- <resultMap id="bookListResultMap" type="java.util.ArrayList"> <result 
+		property="bookCode" column="BOOKCODE" /> <result property="title" column="TITLE" 
+		/> <result property="publisher" column="PUBLISHER" /> <result property="price" 
+		column="PRICE" /> <result property="pages" column="PAGES" /> <result property="description" 
+		column="DESCRIPTION" /> <result property="status" column="STATUS" /> <result 
+		property="author" column="AUTHOR" /> <result property="createdYear" column="CREATED_YEAR" 
+		/> <result property="category" column="CATEGORY" /> </resultMap> -->
+
+	<select id="countImageByBookCode" resultType="int">
+		select count(*)
+		from ANH_DAUSACH where BOOK_CODE = #{bookCode}
+	</select>
+
+	<insert id="addImageInBookTitle"
+		parameterType="com.a2m.back.model.sys.book.ImageBook">
+
+		insert into ANH_DAUSACH (
+		BOOK_CODE,
+		PATH,
+		STATUS,
+		ABOUT
+		)
+		values (
+		#{bookCode},
+		#{path},
+		#{status},
+		#{about}
+		);
+	</insert>
+
+
+	<select id='getImagesByBookCode' parameterType="map"
+		resultType="com.a2m.back.model.sys.book.ImageBook">
+		select 
+		BOOK_CODE as bookCode,
+		ID as id,
+		STATUS as status,
+		PATH as path,
+		ABOUT as about
+		
+		from ANH_DAUSACH
+		where BOOK_CODE = #{bookCode} and STATUS = #{status}
+	</select>
+	
+	<update id="changeStatusImageById" parameterType="map">
+	update ANH_DAUSACH
+	set STATUS = #{status}
+	where id = #{id}
+	</update>
+</mapper>

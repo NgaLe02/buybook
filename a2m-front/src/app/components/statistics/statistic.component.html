@@ -1,0 +1,49 @@
+<div class="search" style="margin-right: 10%">
+  <form>
+    <input
+      style="width: 300px"
+      class="form-control me-2"
+      type="search"
+      placeholder="Nhập"
+      name="searchByUsername"
+    />
+  </form>
+  <button type="button" style="border: #ffffff; background-color: #ffffff">
+    <img
+      src="https://cdn-icons-png.flaticon.com/128/10975/10975953.png"
+      alt=""
+      style="width: 38px; height: 38px"
+    />
+  </button>
+</div>
+
+<div class="container" style="min-height: 786px">
+  <div class="d-flex" style="margin-top: 20px; margin-bottom: 20px">
+    <div class="col-8">
+      <input
+        [routerLink]="'/sys/statistic/book'"
+        type="radio"
+        class="btn-check"
+        name="btnradio"
+        id="btnradio1"
+        [value]="0"
+        autocomplete="off"
+        [checked]="true"
+      />
+      <label class="btn btn-outline-warning" for="btnradio1">Sách</label>
+
+      <input
+        [routerLink]="'/sys/statistic/user'"
+        type="radio"
+        class="btn-check"
+        name="btnradio"
+        id="btnradio2"
+        [value]="1"
+        autocomplete="off"
+      />
+      <label class="btn btn-outline-primary" for="btnradio2">Người dùng</label>
+    </div>
+  </div>
+  <hr />
+  <router-outlet></router-outlet>
+</div>
