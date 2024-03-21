@@ -35,8 +35,6 @@ CREATE TABLE IF NOT EXISTS `ANH_DAUSACH` (
   CONSTRAINT `anh_dausach_ibfk_1` FOREIGN KEY (`BOOK_CODE`) REFERENCES `DAUSACH` (`BOOK_CODE`)
 ) ENGINE=InnoDB AUTO_INCREMENT=195 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
-
 -- Dumping structure for table library_back.BASEROLE
 DROP TABLE IF EXISTS `BASEROLE`;
 CREATE TABLE IF NOT EXISTS `BASEROLE` (
@@ -52,7 +50,10 @@ CREATE TABLE IF NOT EXISTS `BASEROLE` (
   PRIMARY KEY (`ROLE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table library_back.BASEROLE: ~2 rows (approximately)
+INSERT INTO `BASEROLE` (`ROLE_ID`, `ROLE_NM`, `DESCRIPTION`, `CREATED_DATE`, `CREATED_BY`, `UPDATED_BY`, `UPDATED_DATE`, `USER_YN`, `modification_time`) VALUES
+	('R000', 'ROLE_ADMIN', NULL, NULL, NULL, NULL, NULL, NULL, '2023-10-16 01:37:53'),
+	('R001', 'ROLE_NORMAL', NULL, NULL, NULL, NULL, NULL, NULL, '2023-10-16 01:37:53');
 
 -- Dumping structure for table library_back.BASE_USER_ROLE
 DROP TABLE IF EXISTS `BASE_USER_ROLE`;
@@ -64,7 +65,15 @@ CREATE TABLE IF NOT EXISTS `BASE_USER_ROLE` (
   CONSTRAINT `base_user_role_ibfk_1` FOREIGN KEY (`ROLE_ID`) REFERENCES `BASEROLE` (`ROLE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table library_back.BASE_USER_ROLE: ~7 rows (approximately)
+INSERT INTO `BASE_USER_ROLE` (`ROLE_ID`, `USER_UID`, `modification_time`) VALUES
+	('R000', 20230914062250065, '2023-10-16 01:38:50'),
+	('R001', 20230914062250065, '2023-10-16 01:38:50'),
+	('R001', 20230914062807871, '2023-10-16 01:38:50'),
+	('R001', 20230918062007038, '2023-10-16 01:38:50'),
+	('R001', 20231025032146191, '2023-10-25 03:34:23'),
+	('R001', 20231025033519619, '2023-10-25 03:35:38'),
+	('R001', 20231025033627406, '2023-10-25 03:36:46');
 
 -- Dumping structure for table library_back.DANHGIA
 DROP TABLE IF EXISTS `DANHGIA`;
@@ -79,8 +88,6 @@ CREATE TABLE IF NOT EXISTS `DANHGIA` (
   PRIMARY KEY (`EVALUATE_ID`,`SACHMUON_ID`),
   UNIQUE KEY `SACHMUON_ID_UNIQUE` (`SACHMUON_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
-
--- Data exporting was unselected.
 
 -- Dumping structure for table library_back.DAUSACH
 DROP TABLE IF EXISTS `DAUSACH`;
@@ -101,8 +108,6 @@ CREATE TABLE IF NOT EXISTS `DAUSACH` (
   PRIMARY KEY (`BOOK_CODE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
-
 -- Dumping structure for table library_back.GIOHANG
 DROP TABLE IF EXISTS `GIOHANG`;
 CREATE TABLE IF NOT EXISTS `GIOHANG` (
@@ -115,8 +120,6 @@ CREATE TABLE IF NOT EXISTS `GIOHANG` (
   CONSTRAINT `giohang_ibfk_1` FOREIGN KEY (`BOOK_CODE`) REFERENCES `DAUSACH` (`BOOK_CODE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
-
 -- Dumping structure for table library_back.LOAISACH
 DROP TABLE IF EXISTS `LOAISACH`;
 CREATE TABLE IF NOT EXISTS `LOAISACH` (
@@ -127,7 +130,22 @@ CREATE TABLE IF NOT EXISTS `LOAISACH` (
   PRIMARY KEY (`GENRE_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table library_back.LOAISACH: ~14 rows (approximately)
+INSERT INTO `LOAISACH` (`GENRE_ID`, `GENRE_NAME`, `DATE_ADD`, `modification_time`) VALUES
+	(1, 'Tiểu  thuyết', '2023-09-14 14:23:55', '2023-10-23 07:29:22'),
+	(2, 'Hành động', '2023-09-14 14:24:07', '2023-10-16 01:35:31'),
+	(3, 'Trinh thám', '2023-09-14 14:24:26', '2023-10-16 01:35:31'),
+	(4, 'Hài', '2023-09-14 14:24:35', '2023-10-16 01:35:31'),
+	(5, 'Tình cảm', '2023-09-14 14:27:15', '2023-10-16 01:35:31'),
+	(6, 'Lãng mạn', '2023-09-14 15:24:52', '2023-10-16 01:35:31'),
+	(7, 'Hằng ngày', '2023-09-14 15:25:25', '2023-10-23 07:28:45'),
+	(8, 'Viễn tưởn', '2023-09-14 15:26:28', '2023-10-26 01:21:38'),
+	(9, 'Truyện tranh', '2023-09-14 16:03:17', '2023-10-16 01:35:31'),
+	(10, 'Hoạt hình', '2023-09-14 16:03:29', '2023-10-23 08:02:40'),
+	(11, 'Khoa học', '2023-09-14 16:03:43', '2023-10-16 01:35:31'),
+	(12, 'Tâm lý', '2023-09-14 17:16:12', '2023-10-23 07:29:12'),
+	(21, 'Sitcom', '2023-10-23 14:47:11', '2023-10-23 07:47:11'),
+	(22, 'Toán học', '2023-11-01 09:56:44', '2023-11-01 02:56:44');
 
 -- Dumping structure for table library_back.LOAISACH_DAUSACH
 DROP TABLE IF EXISTS `LOAISACH_DAUSACH`;
@@ -141,7 +159,6 @@ CREATE TABLE IF NOT EXISTS `LOAISACH_DAUSACH` (
   CONSTRAINT `loaisach_dausach_ibfk_2` FOREIGN KEY (`GENRE_ID`) REFERENCES `LOAISACH` (`GENRE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
 
 -- Dumping structure for table library_back.PHIEUMUON
 DROP TABLE IF EXISTS `PHIEUMUON`;
@@ -161,7 +178,6 @@ CREATE TABLE IF NOT EXISTS `PHIEUMUON` (
   PRIMARY KEY (`id_phieu_muon`)
 ) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
 
 -- Dumping structure for table library_back.SACH
 DROP TABLE IF EXISTS `SACH`;
@@ -175,7 +191,6 @@ CREATE TABLE IF NOT EXISTS `SACH` (
   CONSTRAINT `sach_ibfk_1` FOREIGN KEY (`BOOK_CODE`) REFERENCES `DAUSACH` (`BOOK_CODE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
 
 -- Dumping structure for table library_back.SACHMUON
 DROP TABLE IF EXISTS `SACHMUON`;
@@ -194,7 +209,6 @@ CREATE TABLE IF NOT EXISTS `SACHMUON` (
   CONSTRAINT `sachmuon_ibfk_2` FOREIGN KEY (`ID_PHIEU_MUON`) REFERENCES `PHIEUMUON` (`id_phieu_muon`)
 ) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
 
 -- Dumping structure for table library_back.THONGBAO
 DROP TABLE IF EXISTS `THONGBAO`;
@@ -210,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `THONGBAO` (
   PRIMARY KEY (`NOTIFICATION_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=282 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
--- Data exporting was unselected.
+-- Dumping data for table library_back.THONGBAO: ~67 rows (approximately)
 
 -- Dumping structure for table library_back.TRUYCAP_EBOOK
 DROP TABLE IF EXISTS `TRUYCAP_EBOOK`;
@@ -221,7 +235,6 @@ CREATE TABLE IF NOT EXISTS `TRUYCAP_EBOOK` (
   PRIMARY KEY (`BOOK_CODE`,`USER_UID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- Data exporting was unselected.
 
 -- Dumping structure for table library_back.WISHLIST
 DROP TABLE IF EXISTS `WISHLIST`;
@@ -234,8 +247,6 @@ CREATE TABLE IF NOT EXISTS `WISHLIST` (
   PRIMARY KEY (`USER_UID`,`BOOK_CODE`),
   UNIQUE KEY `ID_UNIQUE` (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
-
--- Data exporting was unselected.
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
