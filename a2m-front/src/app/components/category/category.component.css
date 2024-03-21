@@ -1,0 +1,142 @@
+.container {
+  align-content: center;
+}
+
+.img-add {
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+}
+
+.content {
+  max-height: 786px;
+  margin-top: 20px;
+}
+
+.btn {
+  width: 150px;
+  height: max-content;
+  margin-right: 20px;
+}
+
+.form-check {
+  margin-top: 35px;
+  margin-left: 10px;
+}
+
+.content-con1 {
+  width: 400px;
+}
+
+.info {
+  margin: 0px;
+  margin-right: 10px;
+}
+
+.img-send {
+  height: 35px;
+  width: 35px;
+  margin: 0px 10px;
+}
+
+.item-table {
+  border-radius: 10px;
+}
+
+.content-item {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+/* CSS để hiển thị tooltip */
+.book_tooltip {
+  position: relative; /* Đảm bảo tooltip nằm trong phạm vi của nút */
+}
+
+/* Ẩn tooltip ban đầu */
+.book_tooltip .tooltiptext {
+  visibility: hidden;
+  width: 100px;
+  background-color: black;
+  color: white;
+  text-align: center;
+  padding: 5px;
+  border-radius: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Hiển thị phía trên nút */
+  left: 50%; /* Canh giữa */
+  transform: translateX(-50%); /* Dịch chuyển để căn giữa tooltip */
+  opacity: 0; /* Mặc định ẩn */
+  transition: opacity 0.3s, visibility 0.3s; /* Hiệu ứng hiển thị */
+}
+.header_wrap {
+  justify-content: space-between;
+  display: flex;
+}
+
+/* Hiển thị tooltip khi di chuột qua nút */
+.book_tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.table_wrap {
+  display: flex;
+  gap: 10px;
+  margin: 20px 45px;
+  justify-content: space-around;
+}
+
+.btn {
+  width: 140px;
+  height: max-content;
+  margin-right: 20px;
+}
+
+.menu {
+  margin: 20px 0px;
+  align-content: center;
+}
+
+.form-check {
+  margin-top: 35px;
+  margin-left: 10px;
+}
+
+.content-con1 {
+  width: 400px;
+}
+
+.img-item {
+  width: 75px;
+  height: 75px;
+  margin-right: 20px;
+}
+
+.info {
+  margin: 0px;
+  margin-right: 10px;
+}
+
+.item-table {
+  border-radius: 10px;
+}
+
+.content-item {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.search {
+  width: 200px;
+  margin: 8px 0;
+  position: absolute;
+  top: 150px;
+  right: 260px;
+  z-index: 1;
+  display: flex;
+}

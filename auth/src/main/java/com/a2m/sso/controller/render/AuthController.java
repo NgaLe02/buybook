@@ -4,11 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +13,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.a2m.sso.constant.CommonConstants;
 import com.a2m.sso.constant.SecurityConstants;
-import com.a2m.sso.model.UserResponse;
 import com.a2m.sso.service.ComSeqService;
 import com.a2m.sso.service.impl.UserServiceImpl;
 import com.a2m.sso.util.CookieUtils;
@@ -32,7 +26,7 @@ import com.a2m.sso.util.JwtProvinderUtils;
 @Controller
 @RequestMapping("auth")
 public class AuthController {
-
+	
     @Autowired
     private JwtProvinderUtils jwtProvinderUtils;
     

@@ -14,7 +14,13 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.a2m.sso.constant.CommonConstants;
 import com.a2m.sso.constant.SecurityConstants;
@@ -72,11 +78,6 @@ public class AuthApiController {
 
 	@PostMapping("signUp")
 	private ResponseEntity<DataResponse> signUp(HttpServletResponse reponse, @RequestBody SignUpReq signUpReq) {
-		/*
-		 * @RequestBody: @RequestBody là một annotation được sử dụng để chỉ định rằng dữ
-		 * liệu được gửi lên từ client sẽ được trích xuất và chuyển đổi thành một đối
-		 * tượng Java tương ứng.
-		 */
 		DataResponse resp = new DataResponse();
 		try {
 			String result = userService.saveUserDao(signUpReq);
@@ -100,23 +101,23 @@ public class AuthApiController {
 		}
 		return ResponseEntity.ok(resp);
 	}
-	
+
 	@PostMapping("forgotPassword")
-	private ResponseEntity<DataResponse> forgotPassword(HttpServletResponse reponse, @RequestBody forgotPasswordReq forgotPasswordReq){
+	private ResponseEntity<DataResponse> forgotPassword(HttpServletResponse reponse,
+			@RequestBody forgotPasswordReq forgotPasswordReq) {
 		DataResponse resp = new DataResponse();
-		
+
 		String result = userService.forgotPassword(forgotPasswordReq);
-		//kiểm tra nếu tài khoản chưa xác thực thì không cho người dùng thực hiện thao tác quên mật khẩu
-		
-		if(result.equals(CommonConstants.EMAIL_DONT_EXIST)) {
+		// kiểm tra nếu tài khoản chưa xác thực thì không cho người dùng thực hiện thao
+		// tác quên mật khẩu
+
+		if (result.equals(CommonConstants.EMAIL_DONT_EXIST)) {
 			resp.setStatus(CommonConstants.RESULT_NG);
 			resp.setMessage(CommonConstants.EMAIL_DONT_EXIST);
-		}
-		else if(result.equals(CommonConstants.USERNAME_DONT_EXIST)) {
+		} else if (result.equals(CommonConstants.USERNAME_DONT_EXIST)) {
 			resp.setStatus(CommonConstants.RESULT_NG);
 			resp.setMessage(CommonConstants.USERNAME_DONT_EXIST);
-		}
-		else {
+		} else {
 			resp.setStatus(CommonConstants.RESULT_OK);
 			resp.setMessage("");
 		}
@@ -124,37 +125,47 @@ public class AuthApiController {
 	}
 
 	@PostMapping("changePassword")
-	private ResponseEntity<DataResponse> changePassword(HttpServletResponse reponse, @RequestBody NewPassword newPassword){
+	private ResponseEntity<DataResponse> changePassword(HttpServletResponse reponse,
+			@RequestBody NewPassword newPassword) {
 		DataResponse resp = new DataResponse();
 		Boolean result = userService.changePassword(newPassword);
-		if(result) {
+		if (result) {
 			resp.setStatus(CommonConstants.RESULT_OK);
-		}
-		else {
+		} else {
 			resp.setStatus(CommonConstants.RESULT_NG);
 		}
 		return ResponseEntity.ok(resp);
 	}
 
 	@GetMapping("getListUserInfo/{status}")
-	private ResponseEntity<List<UserResponse>> getListUserInfo(@PathVariable String status,@RequestParam(required = false) String page){
-		List<UserResponse> resp = userService.getListUserInfo(status,page);
+	private ResponseEntity<List<UserResponse>> getListUserInfo(@PathVariable String status,
+			@RequestParam(value = "page", required = false) String page,
+			@RequestParam(value = "search", required = false) String search) {
+		List<UserResponse> resp = userService.getListUserInfo(status, page, 15, search);
+		return ResponseEntity.ok(resp);
+	}
+
+	@GetMapping("getAllUserInfo")
+	private ResponseEntity<List<UserResponse>> getAllUserInfo(@RequestParam(required = false) String page,
+			@RequestParam(value="size", required = false) int size,
+			@RequestParam(value = "search", required = false) String search) {
+		List<UserResponse> resp = userService.getAllUserInfo(size, page, search);
 		return ResponseEntity.ok(resp);
 	}
 
 	@GetMapping("search/{userId}")
-	public ResponseEntity<List<UserResponse>> searchByUserId(@PathVariable String userId){
-		List<UserResponse> list= new ArrayList<>();
+	public ResponseEntity<List<UserResponse>> searchByUserId(@PathVariable String userId) {
+		List<UserResponse> list = new ArrayList<>();
 		try {
 			list = userService.searchByUserId(userId);
-		}catch (Exception e){
+		} catch (Exception e) {
 			System.out.println(e);
 		}
 		return ResponseEntity.ok(list);
 	}
 
 	@GetMapping("userInfo/{userUid}")
-	private ResponseEntity<UserResponse> getUserInfoByUserUid(@PathVariable String userUid){
+	private ResponseEntity<UserResponse> getUserInfoByUserUid(@PathVariable String userUid) {
 		UserResponse resp = userService.getUserInfoByUserUid(userUid);
 		return ResponseEntity.ok(resp);
 	}

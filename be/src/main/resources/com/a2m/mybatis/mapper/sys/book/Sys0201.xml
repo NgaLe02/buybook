@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.a2m.back.dao.sys.book.Sys0201DAO">
+
+	<resultMap id="bookGenreResultMap" type="java.util.ArrayList">
+		<result property="bookCode" column="BOOKCODE" />
+		<result property="genre_id" column="GENRE_ID" />
+	</resultMap>
+
+	<select id="getBooksWithStatus" parameterType="map"
+		resultType="com.a2m.back.model.resp.BookResponse">
+
+		SELECT
+		BOOK_CODE as bookCode,
+		TITLE as title,
+		PUBLISHER as publisher,
+		PRICE as price,
+		PAGES as pages,
+		DESCRIPTION as description,
+		STATUS as
+		status,
+		AUTHOR as author,
+		CREATED_YEAR as createdYear,
+		CATEGORY as
+		category,
+		(SELECT
+		sum(COUNT) FROM TRUYCAP_EBOOK WHERE BOOK_CODE =
+		DS.BOOK_CODE) AS
+		numberAccess,
+		EBOOK AS ebook,
+		DATE_ADD AS dateAdd
+		FROM
+		DAUSACH as DS
+		where STATUS = #{status}
+		AND EBOOK
+		= #{type}
+		and
+		TITLE LIKE
+		CONCAT('%',
+		#{search}, '%')
+		<if test="search.length > 0">
+			OR AUTHOR LIKE CONCAT('%', #{search}, '%')
+			OR PUBLISHER
+			LIKE CONCAT('%', #{search}, '%')
+		</if>
+		<choose>
+			<when test='"00".equals(sort)'>
+				order by DATE_ADD desc
+			</when>
+			<when test='"01".equals(sort)'>
+				order by DATE_ADD asc
+			</when>
+			<when test='"10".equals(sort)'>
+				order by TITLE desc
+			</when>
+			<when test='"11".equals(sort)'>
+				order by TITLE asc
+			</when>
+			<when test='"20".equals(sort)'>
+				order by AUTHOR desc
+			</when>
+			<when test='"21".equals(sort)'>
+				order by AUTHOR ASC
+			</when>
+			<when test='"30".equals(sort)'>
+				order by sum(COUNT) desc
+			</when>
+			<when test='"31".equals(sort)'>
+				order by sum(COUNT) asc
+			</when>
+			
+		</choose>
+
+
+		LIMIT #{size} OFFSET #{ignore};
+
+	</select>
+
+
+	<select id="countBooksWithStatus" resultType="int">
+		SELECT count(*) as quantity
+		FROM DAUSACH
+		where STATUS = #{status} and
+		TITLE LIKE CONCAT('%', #{search}, '%')
+		AND EBOOK = #{type}
+
+		<if test="search.length > 0">
+			OR AUTHOR LIKE CONCAT('%', #{search}, '%')
+			OR PUBLISHER
+			LIKE CONCAT('%', #{search}, '%')
+		</if>
+	</select>
+
+	<select id='getBooksLimit' parameterType="map"
+		resultType="com.a2m.back.model.resp.BookResponse">
+
+		SELECT
+		DS.BOOK_CODE as bookCode,
+		DS.TITLE as title,
+		DS.PUBLISHER as
+		publisher,
+		DS.PRICE as price,
+		DS.PAGES as pages,
+		DS.DESCRIPTION as
+		description,
+		DS.STATUS as status,
+		DS.AUTHOR as author,
+		DS.CREATED_YEAR as
+		createdYear,
+		DS.CATEGORY as category,
+		DS.EBOOK as ebook,
+		(SELECT
+		sum(COUNT) FROM TRUYCAP_EBOOK WHERE BOOK_CODE = DS.BOOK_CODE) AS
+		numberAccess
+		FROM DAUSACH AS
+		DS
+		INNER JOIN
+		LOAISACH_DAUSACH AS LSD ON
+		DS.BOOK_CODE =
+		LSD.BOOK_CODE
+		INNER JOIN
+		LOAISACH AS LS ON LSD.GENRE_ID =
+		LS.GENRE_ID
+		WHERE DS.STATUS
+		= 1
+		AND
+		DS.TITLE LIKE CONCAT('%', #{search},
+		'%')
+
+		<if test="authorList != null and authorList.length > 0">
+			AND DS.AUTHOR IN
+			<foreach collection="authorList" item="author" open="("
+				close=")" separator=",">
+				#{author}
+			</foreach>
+		</if>
+		<if test="type != null and type.length == 1">
+			AND DS.EBOOK = #{type[0]}
+		</if>
+		AND LSD.GENRE_ID LIKE CONCAT('%', #{category}, '%')
+		AND LS.GENRE_NAME
+		LIKE CONCAT('%', #{categoryByName}, '%')
+		<if test="search.length > 0">
+			OR DS.AUTHOR LIKE CONCAT('%', #{search}, '%')
+		</if>
+
+		GROUP BY
+		DS.book_code
+		LIMIT #{size} OFFSET #{ignore};
+
+
+	</select>
+
+
+	<!-- <select id='getBooksSearch' parameterType="map" resultType="com.a2m.back.model.sys.book.BookTitle"> 
+		SELECT DS.BOOK_CODE as bookCode, DS.TITLE as title, DS.PUBLISHER as publisher, 
+		DS.PRICE as price, DS.PAGES as pages, DS.DESCRIPTION as description, DS.STATUS 
+		as status, DS.AUTHOR as author, DS.CREATED_YEAR as createdYear, DS.CATEGORY 
+		as category, COUNT(S.book_code) AS quantity FROM DAUSACH AS DS LEFT JOIN 
+		SACH AS S ON DS.book_code = S.book_code WHERE DS.TITLE LIKE CONCAT('%', #{search}, 
+		'%') GROUP BY DS.book_code LIMIT 12 offset #{ignore} </select> -->
+
+	<update id="updateBook"
+		parameterType="com.a2m.back.model.sys.book.BookTitle">
+		UPDATE DAUSACH
+		SET TITLE=#{title},
+		PUBLISHER=#{publisher},
+		PRICE=#{price},
+		PAGES=#{pages},
+		DESCRIPTION=#{description},
+		STATUS=#{status},
+		AUTHOR=#{author},
+		CREATED_YEAR=#{createdYear},
+		CATEGORY=#{category}
+		WHERE
+		BOOK_CODE=#{bookCode}
+	</update>
+
+	<select id="checkBookExist"
+		parameterType="com.a2m.back.model.sys.book.BookTitle" resultType="int">
+		SELECT COUNT(*) FROM DAUSACH
+		WHERE TITLE=#{title} AND
+		AUTHOR=#{author}
+		AND
+		PUBLISHER=#{publisher}
+		AND
+		BOOK_CODE!=#{bookCode}
+	</select>
+
+	<select id="getBookInfo" parameterType="String"
+		resultType="com.a2m.back.model.resp.BookResponse">
+		SELECT
+		DS.BOOK_CODE as bookCode,
+		DS.TITLE as title,
+		DS.PUBLISHER as publisher,
+		DS.PRICE as price,
+		DS.PAGES as pages,
+		DS.DESCRIPTION as description,
+		DS.STATUS as status,
+		DS.AUTHOR as author,
+		DS.CREATED_YEAR as createdYear,
+		DS.CATEGORY as category,
+		DS.EBOOK as
+		ebook,
+		(SELECT sum(COUNT) FROM TRUYCAP_EBOOK WHERE BOOK_CODE =
+		DS.BOOK_CODE) AS numberAccess,
+		COUNT(S.book_code) AS quantity
+		FROM
+		DAUSACH AS DS
+		LEFT JOIN SACH
+		AS S ON
+		DS.book_code = S.book_code
+		where
+		DS.BOOK_CODE =
+		#{bookCode}
+		GROUP
+		BY
+		DS.book_code
+	</select>
+
+	<insert id="addBookTitle"
+		parameterType="com.a2m.back.model.sys.book.BookTitle">
+		INSERT INTO DAUSACH (BOOK_CODE, TITLE, PUBLISHER, PRICE,
+		PAGES, DESCRIPTION, STATUS, AUTHOR, CREATED_YEAR, CATEGORY, DATE_ADD,
+		EBOOK)
+		VALUES (
+		#{bookCode},
+		#{title},
+		#{publisher},
+		#{price},
+		#{pages},
+		#{description},
+		#{status},
+		#{author},
+		#{createdYear},
+		#{category},
+		now(),
+		#{ebook}
+		)
+	</insert>
+
+	<insert id="addEbook">
+		INSERT INTO DAUSACH (IMG_EBOOK)
+		VALUES(
+		#{filename}
+		)
+	</insert>
+
+	<update id="changeStatus"
+		parameterType="com.a2m.back.model.sys.book.BookTitle">
+		UPDATE DAUSACH
+		SET STATUS=#{status}
+		WHERE
+		BOOK_CODE=#{bookCode}
+	</update>
+
+	<insert id="addBookGenre">
+		INSERT INTO LOAISACH_DAUSACH (BOOK_CODE, GENRE_ID)
+		VALUES(
+		#{bookCode},
+		#{genre_id}
+		)
+	</insert>
+
+	<delete id="deleteBookGenre" parameterType="String">
+		DELETE FROM
+		LOAISACH_DAUSACH WHERE BOOK_CODE = #{bookCode}
+	</delete>
+
+	<select id="getBookTitleByGenre" parameterType="int"
+		resultType="com.a2m.back.model.sys.book.BookTitle">
+
+		SELECT
+		BOOK_CODE as bookCode,
+		TITLE as title,
+		PUBLISHER as
+		publisher,
+		PRICE as price,
+		PAGES as pages,
+		DESCRIPTION as description,
+		STATUS as
+		status,
+		AUTHOR as author,
+		CREATED_YEAR as createdYear,
+		CATEGORY
+		as
+		category
+		FROM DAUSACH WHERE BOOK_CODE IN (
+		SELECT BOOK_CODE
+		FROM
+		LOAISACH_DAUSACH WHERE GENRE_ID = #{genre_id}
+		)
+		limit 5 offset
+		#{ignore}
+
+	</select>
+
+	<!-- SELECT SACH.BOOK_CODE as bookCode, TITLE as title, PUBLISHER as publisher, 
+		PRICE as price, PAGES as pages, DESCRIPTION as description, SACH.STATUS as 
+		status, AUTHOR as author, CREATED_YEAR as createdYear, CATEGORY as category, 
+		COUNT(SACH.BOOK_CODE) AS quantity FROM DAUSACH JOIN SACH ON DAUSACH.BOOK_CODE 
+		= SACH.BOOK_CODE GROUP BY DAUSACH.BOOK_CODE, DAUSACH.title; -->
+
+	<!-- <select id='countTotalBookTitle' parameterType="String"> select count(*) 
+		as total_count from ( SELECT count(*) FROM DAUSACH AS DS INNER JOIN LOAISACH_DAUSACH 
+		AS LSD ON DS.BOOK_CODE = LSD.BOOK_CODE WHERE DS.TITLE LIKE CONCAT('%', #{search}, 
+		'%') AND DS.AUTHOR LIKE CONCAT('%', #{author}, '%') AND LSD.GENRE_ID LIKE 
+		CONCAT('%', #{category}, '%') GROUP BY DS.book_code) as quantiy ; </select> -->
+
+	<select id='countTotalBookTitle' parameterType="map">
+		select count(*) as total_count from (
+		SELECT count(*)
+		FROM DAUSACH AS DS
+		INNER JOIN LOAISACH_DAUSACH AS LSD ON DS.BOOK_CODE = LSD.BOOK_CODE
+		INNER JOIN LOAISACH AS LS ON LSD.GENRE_ID = LS.GENRE_ID
+		WHERE DS.STATUS
+		= 1
+		AND DS.TITLE LIKE CONCAT('%', #{search}, '%')
+		<if test="authorList != null and authorList.length > 0">
+			AND DS.AUTHOR IN
+			<foreach collection="authorList" item="author" open="("
+				close=")" separator=",">
+				#{author}
+			</foreach>
+		</if>
+		<if test="type != null and type.length == 1">
+			AND DS.EBOOK = #{type[0]}
+		</if>
+		AND LSD.GENRE_ID LIKE CONCAT('%', #{category}, '%')
+		AND LS.GENRE_NAME
+		LIKE CONCAT('%', #{categoryByName}, '%')
+		<if test="search.length > 0">
+			OR DS.AUTHOR LIKE CONCAT('%', #{search}, '%')
+		</if>
+		GROUP BY
+		DS.book_code
+		) as
+		quantity ;
+	</select>
+
+	<update id="addCover" parameterType="String">
+		UPDATE DAUSACH SET IMG =
+		#{imgFileName} WHERE BOOK_CODE = #{bookCode}
+	</update>
+
+	<select id='getAuthor'>
+		<!-- SELECT author, COUNT(*) AS total_books FROM DAUSACH GROUP BY author 
+			ORDER BY total_books DESC LIMIT 5; -->
+		SELECT author
+		FROM DAUSACH
+		GROUP BY author
+		ORDER BY COUNT(*) DESC
+		LIMIT 5;
+	</select>
+
+	<select id="countBooksAvailable" parameterType="String">
+		SELECT COUNT(*)
+		FROM SACH
+		WHERE BOOK_CODE=#{bookCode}
+		AND STATUS = 1
+		AND BOOK_ID NOT IN (
+		SELECT BOOK_ID FROM SACHMUON
+		WHERE SUBSTRING(BOOK_ID, 1, 8) =
+		#{bookCode}
+		AND (STATUS = 1) or (STATUS = 0 and REQUIRED = 1))
+	</select>
+
+	<update id="changeStatusEbook" parameterType="String">
+		UPDATE DAUSACH SET
+		EBOOK = #{status}
+		WHERE BOOK_CODE = #{bookCode}
+	</update>
+
+
+
+	<update id="addAccess" parameterType="String">
+		<if test="checkRecordExist  ==  1">
+			UPDATE TRUYCAP_EBOOK SET COUNT = COUNT + 1
+			WHERE BOOK_CODE
+			= #{bookCode}
+			AND USER_UID = #{userUid}
+		</if>
+		<if test="checkRecordExist ==  0">
+			INSERT INTO TRUYCAP_EBOOK(BOOK_CODE, USER_UID, COUNT)
+			VALUES (#{bookCode}, #{userUid}, 1)
+		</if>
+
+	</update>
+
+	<select id="checkRecordExist" resultType="boolean">
+		SELECT COUNT(*) FROM
+		TRUYCAP_EBOOK
+		WHERE BOOK_CODE = #{bookCode}
+		AND USER_UID = #{userUid}
+	</select>
+
+	<select id="countAccessOfEbookOfListUser" parameterType="String"
+		resultType="com.a2m.back.model.resp.UserResponse">
+		select COUNT AS numberAccess,
+		USER_UID as userUid
+		FROM
+		TRUYCAP_EBOOK
+		WHERE BOOK_CODE = #{bookCode}
+		AND
+		DS.TITLE LIKE CONCAT('%',
+		#{search},
+		'%')
+
+
+	</select>
+
+	<select id="getListEbookOfAUser" parameterType="String"
+		resultType="com.a2m.back.model.resp.BookResponse">
+		SELECT
+		DS.BOOK_CODE AS bookCode,
+		DS.TITLE AS title,
+		DS.PUBLISHER AS publisher,
+		DS.PRICE AS price,
+		DS.PAGES AS pages,
+		DS.DESCRIPTION AS description,
+		DS.STATUS AS status,
+		DS.AUTHOR AS author,
+		DS.CREATED_YEAR AS createdYear,
+		DS.CATEGORY AS category,
+		(SELECT (COUNT)
+		FROM TRUYCAP_EBOOK WHERE BOOK_CODE =
+		DS.BOOK_CODE and USER_UID =
+		#{userUid}) AS numberAccess,
+		DS.EBOOK AS ebook
+		FROM DAUSACH AS DS
+		INNER
+		JOIN LOAISACH_DAUSACH AS LSD ON DS.BOOK_CODE = LSD.BOOK_CODE
+		INNER JOIN
+		LOAISACH AS LS ON LSD.GENRE_ID = LS.GENRE_ID
+		LEFT JOIN TRUYCAP_EBOOK AS
+		TC ON DS.BOOK_CODE = TC.BOOK_CODE
+		WHERE TC.USER_UID = #{userUid} and
+		DS.TITLE LIKE CONCAT('%',
+		#{search},
+		'%')
+	</select>
+</mapper>

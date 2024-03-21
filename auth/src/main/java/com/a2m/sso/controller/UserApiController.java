@@ -14,95 +14,110 @@ import javax.xml.crypto.Data;
 import java.util.List;
 
 /**
- * Author tiennd
- * Created date 2023-07-15
+ * Author tiennd Created date 2023-07-15
  */
 
 @RestController
 @RequestMapping("api/user")
 public class UserApiController {
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @GetMapping("getUserInfo")
-    public ResponseEntity<UserResponse> getUserInfo() {
-        DataResponse resp = new DataResponse();
-        try {
-            UserResponse userResponse = userService.getUserInfo();
-            resp.setStatus(CommonConstants.RESULT_OK);
-            resp.setResponseData(userResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            resp.setStatus(CommonConstants.RESULT_NG);
-        }
-        return ResponseEntity.ok((UserResponse) resp.getResponseData());
-    }
+	@GetMapping("getUserInfo")
+	public ResponseEntity<UserResponse> getUserInfo() {
+		DataResponse resp = new DataResponse();
+		try {
+			UserResponse userResponse = userService.getUserInfo();
+			resp.setStatus(CommonConstants.RESULT_OK);
+			resp.setResponseData(userResponse);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.setStatus(CommonConstants.RESULT_NG);
+		}
+		return ResponseEntity.ok((UserResponse) resp.getResponseData());
+	}
 
-    @PostMapping("updateUserInfo")
-    public ResponseEntity<DataResponse> updateUserInfo(@RequestBody UserResponse userResponse) {
-        DataResponse resp = new DataResponse();
-        try {
-            userService.updateUserInfo(userResponse);
+	@PostMapping("updateUserInfo")
+	public ResponseEntity<DataResponse> updateUserInfo(@RequestBody UserResponse userResponse) {
+		DataResponse resp = new DataResponse();
+		try {
+			userService.updateUserInfo(userResponse);
 //            UserResponse userResponse = userService.getUserInfo();
-            resp.setStatus(CommonConstants.RESULT_OK);
+			resp.setStatus(CommonConstants.RESULT_OK);
 //            resp.setResponseData(userResponse);
-        } catch (Exception e) {
-            e.printStackTrace();
-            resp.setStatus(CommonConstants.RESULT_NG);
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.setStatus(CommonConstants.RESULT_NG);
+		}
 //        return ResponseEntity.ok((UserResponse) resp.getResponseData());
-        return ResponseEntity.ok(resp);
-    }
+		return ResponseEntity.ok(resp);
+	}
 
-    @GetMapping("count")
-    public ResponseEntity<Integer> getCountUser(@RequestParam String status) {
-        int total = 0;
-        try {
-            total = userService.getCountUser(status );
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return ResponseEntity.ok(total);
-    }
+	@GetMapping("count")
+	public ResponseEntity<DataResponse> getCountUser(@RequestParam String status,
+			@RequestParam(value = "search", required = false) String search) {
+		int total = 0;
+		DataResponse resp = new DataResponse();
+		try {
+			total = userService.getCountUser(status, search);
+			resp.setResponseData(total);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return ResponseEntity.ok(resp);
+	}
 
-    @PutMapping("disable")
-    public ResponseEntity<DataResponse> diActiveUser(@RequestParam String userUid) {
-        DataResponse resp = new DataResponse();
-        try {
-            userService.diActiveUser(userUid);
-            resp.setStatus(CommonConstants.RESULT_OK);
-        } catch (Exception e) {
-            System.out.println(e);
-            resp.setStatus(CommonConstants.RESULT_NG);
-        }
-        return ResponseEntity.ok(resp);
-    }
-    
-    @PutMapping("active")
-    public ResponseEntity<DataResponse> activeUser(@RequestParam String userUid) {
-        DataResponse resp = new DataResponse();
-        try {
-            userService.activeUser(userUid);
-            resp.setStatus(CommonConstants.RESULT_OK);
-        } catch (Exception e) {
-            System.out.println(e);
-            resp.setStatus(CommonConstants.RESULT_NG);
-        }
-        return ResponseEntity.ok(resp);
-    }
-    
-    @PostMapping("/cover/add/{fileName}")
-    public ResponseEntity<DataResponse> addUserCover(@PathVariable String fileName) {
-     DataResponse resp = new DataResponse();
-        try {
-        	userService.addUserCover(fileName);
-        	resp.setStatus(CommonConstants.RESULT_OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            resp.setStatus(CommonConstants.RESULT_NG);
-        }
-        return ResponseEntity.ok(resp);
-    }
+	@GetMapping("countAllUser")
+	public ResponseEntity<DataResponse> countAllUser(@RequestParam String search) {
+		int total = 0;
+		DataResponse resp = new DataResponse();
+		try {
+			total = userService.getCountAllUser(search);
+			resp.setResponseData(total);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return ResponseEntity.ok(resp);
+	}
+
+	@PutMapping("disable")
+	public ResponseEntity<DataResponse> diActiveUser(@RequestParam String userUid) {
+		DataResponse resp = new DataResponse();
+		try {
+			userService.diActiveUser(userUid);
+			resp.setStatus(CommonConstants.RESULT_OK);
+		} catch (Exception e) {
+			System.out.println(e);
+			resp.setStatus(CommonConstants.RESULT_NG);
+		}
+		return ResponseEntity.ok(resp);
+	}
+
+	@PutMapping("active")
+	public ResponseEntity<DataResponse> activeUser(@RequestParam String userUid) {
+		DataResponse resp = new DataResponse();
+		try {
+			userService.activeUser(userUid);
+			resp.setStatus(CommonConstants.RESULT_OK);
+		} catch (Exception e) {
+			System.out.println(e);
+			resp.setStatus(CommonConstants.RESULT_NG);
+		}
+		return ResponseEntity.ok(resp);
+	}
+
+	@PostMapping("/cover/add/{fileName}")
+	public ResponseEntity<DataResponse> addUserCover(@PathVariable String fileName) {
+		DataResponse resp = new DataResponse();
+		try {
+			userService.addUserCover(fileName);
+			resp.setStatus(CommonConstants.RESULT_OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			resp.setStatus(CommonConstants.RESULT_NG);
+		}
+		return ResponseEntity.ok(resp);
+	}
 
 }

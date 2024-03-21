@@ -1,0 +1,130 @@
+<div class="container">
+  <div style="margin-top: 20px; width: 190px; height: max-content">
+    <div class="shadow-sm bg-body-tertiary p-3 mr-2 rounded">
+      <h3>Loại sách</h3>
+      <div class="checkbox">
+        <input
+          id="ebook"
+          type="checkbox"
+          value="ebook"
+          [checked]="type.includes('1')"
+          (click)="selectCatBookTitle('1')"
+        />
+        <label style="margin-left: 5px" for="ebook"> Ebook </label> <br />
+        <input
+          id="sachin"
+          type="checkbox"
+          value="sach_in"
+          [checked]="type.includes('0')"
+          (click)="selectCatBookTitle('0')"
+        />
+        <label style="margin-left: 5px" for="sachin"> Sách in </label>
+      </div>
+    </div>
+
+    <div
+      class="shadow-sm bg-body-tertiary p-3 mr-2 rounded"
+      style="margin-top: 20px"
+    >
+      <h3>Tác giả</h3>
+      <div class="checkbox" *ngFor="let a of listAuthorToFIlter">
+        <label>
+          <input
+            type="checkbox"
+            [value]="a"
+            [checked]="listSearchAuthor.includes(a)"
+            (change)="handleCheckboxChange(a)"
+          />
+          {{ a }}
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="main" style="min-height: 786px">
+    <div
+      class="row"
+      *ngFor="
+        let g of groupBookTitle
+          | paginate
+            : {
+                itemsPerPage: tableSize,
+                currentPage: pageCurrent,
+                totalItems: maxPage.valueOf() * 3
+              };
+        let i = index
+      "
+    >
+      <div
+        class="item-book shadow bg-body rounded"
+        *ngFor="let b of g; let j = index"
+      >
+        <button style="background-color: #ffffff; border: #ffffff">
+          <img
+            [src]="imageToShowSrc[i * 4 + j]"
+            alt=""
+            class="img-book"
+            (click)="showBookDetail(b)"
+          />
+        </button>
+
+        <div style="height: 80px; align-content: flex-end" class="content-book">
+          <div style="height: 70px">
+            <p class="book_author" type="button">Tác giả: {{ b.author }}</p>
+            <p class="title-book" style="margin: 0px">{{ b.title }}</p>
+          </div>
+          <div class="image d-flex main justify-content-between">
+            <div class="btn_add">
+              <!-- <img
+                *ngIf="b.ebook"
+                src="../../../../assets/img/ebook.png"
+                alt=""
+                class="img_ebook"
+              /> -->
+              <!-- <span class="tooltiptext">Ebook</span> -->
+            </div>
+            <div class="btn_add">
+              <img
+                *ngIf="b.ebook"
+                src="../../../../assets/img/read_ebook.png"
+                alt=""
+                class="img_add"
+                routerLink="/home/book/ebook/{{ b.bookCode }}"
+              />
+              <span *ngIf="b.ebook" class="tooltiptext">Đọc online</span>
+              <img
+                (click)="addBookToCart(b)"
+                *ngIf="!b.ebook"
+                src="../../../../assets/img/cart.png"
+                alt=""
+                class="img_add"
+              />
+              <span *ngIf="!b.ebook" class="tooltiptext">Thêm sách!</span>
+            </div>
+          </div>
+
+          <!-- <ng-template #btn_disable>
+            <button type="button" class="btn_add" (click)="addBookToCart(b)">
+              <img
+                src="../../../../assets/img/ebook.png"
+                alt=""
+                class="img_add"
+              />
+              <span class="tooltiptext">Sách đã hết!</span>
+            </button>
+          </ng-template> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+>
+<div>
+  <pagination-controls
+    class="pagination"
+    style="justify-content: center; margin: 50px 0px"
+    previousLabel=""
+    nextLabel=""
+    (pageChange)="changePage($event)"
+  ></pagination-controls>
+</div>

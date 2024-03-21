@@ -1,0 +1,190 @@
+<!-- HEADER    -->
+<header>
+  <!-- MAIN HEADER -->
+  <div id="header">
+    <!-- container -->
+    <div class="container">
+      <!-- row -->
+      <div class="row row_header">
+        <!-- LOGO -->
+        <div class="col-md-2">
+          <div class="header-logo">
+            <a routerLink="/" class="logo">
+              <img src="../../../assets/img/atwom.png" alt="" />
+            </a>
+          </div>
+        </div>
+        <!-- /LOGO -->
+
+        <!-- SEARCH BAR -->
+        <div class="col-md-6 d-flex justify-content-center">
+          <div class="header-search">
+            <form>
+              <!-- <select class="input-select" [(ngModel)]='selectSearch' name="selectStatus">
+                <option value="0">Tên sách</option>
+                <option value="1">Tên tác giả</option>
+                <option value="2">Tên thể loại</option>
+              </select> -->
+              <input
+                class="input"
+                placeholder="Nhập sách bạn muốn tìm"
+                [(ngModel)]="enteredText"
+                (input)="onSearchTextChanged()"
+                name="search"
+                style="width: 350px"
+              />
+              <button class="search-btn" (click)="searchBookBackEnd()">
+                Tìm kiếm
+              </button>
+            </form>
+          </div>
+        </div>
+        <!-- /SEARCH BAR -->
+
+        <!-- ACCOUNT -->
+        <div class="col-md-3 clearfix d-flex">
+          <div class="header-ctn" style="min-width: 300px">
+            <div>
+              <a
+                routerLink="/user/waitlist"
+                *ngIf="isAuthenticate && waitListTotal > 0"
+              >
+                <i class="fa fa-heart-o"></i>
+                <span>Sách đăng ký</span>
+                <div class="qty">{{ waitListTotal }}</div>
+              </a>
+            </div>
+
+            <div>
+              <a
+                routerLink="/user/notification"
+                *ngIf="isAuthenticate && notificationTotal > 0"
+              >
+                <i class="fa fa-bell-o" aria-hidden="true"></i>
+                <span>Thông báo</span>
+                <div class="qty">{{ notificationTotal }}</div>
+              </a>
+            </div>
+            <!-- Cart -->
+            <div class="dropdown">
+              <a
+                routerLink="/user/cart"
+                aria-expanded="true"
+                style="cursor: pointer"
+                *ngIf="isAuthenticate && cartTotal > 0"
+              >
+                <i class="fa fa-shopping-cart"></i>
+                <span>Giỏ hàng</span>
+                <div class="qty">{{ cartTotal }}</div>
+              </a>
+            </div>
+            <!-- /Cart -->
+
+            <div *ngIf="!isAuthenticate" class="d-flex" style="margin: 0px">
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                (click)="login()"
+              >
+                Đăng nhập
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                (click)="login()"
+              >
+                Đăng ký
+              </button>
+            </div>
+
+            <!-- Menu Toogle -->
+            <div class="menu-toggle">
+              <a>
+                <i class="fa fa-bars"></i>
+                <span>Menu</span>
+              </a>
+            </div>
+            <!-- /Menu Toogle -->
+          </div>
+
+          <div type="button" class="header-ctn user-manage">
+            <ul *ngIf="isAuthenticate" class="header-links pull-right">
+              <li class="user-account" (click)="toggleUserMenu()">
+                <img
+                  src="../../../../assets/img/user_menu.png"
+                  alt=""
+                  style="
+                    width: 40px;
+                    height: 40px;
+                    padding-bottom: 3px;
+                    margin-left: 50px;
+                  "
+                />
+                <ul class="user-menu" [ngClass]="{ show: isUserMenuVisible }">
+                  <li class="user-item">
+                    <a routerLink="/user/userInfo">Tài khoản của tôi</a>
+                  </li>
+                  <li class="user-item">
+                    <a routerLink="/user/phieumuon">Phiếu mượn</a>
+                  </li>
+                  <li class="user-item user-item-separate">
+                    <a (click)="logout()">Đăng xuất</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- /ACCOUNT -->
+      </div>
+      <!-- row -->
+    </div>
+    <!-- container -->
+  </div>
+</header>
+<!-- /HEADER -->
+
+<!-- NAVIGATION -->
+<nav id="navigation">
+  <!-- container -->
+  <div class="container">
+    <!-- responsive-nav -->
+    <div id="responsive-nav" style="padding-left: 15px">
+      <!-- NAV -->
+      <ul
+        #navItems
+        class="main-nav nav py-3"
+        *ngIf="roleUser && roleUser.length > 1"
+      >
+        <li><a routerLink="/home" routerLinkActive="active">Trang chủ</a></li>
+        <li>
+          <a routerLink="/sys/statistic" routerLinkActive="active">Thống kê</a>
+        </li>
+        <li>
+          <a routerLink="/sys/list-phieumuon/" routerLinkActive="active"
+            >Quản lý phiếu mượn</a
+          >
+        </li>
+        <li>
+          <a routerLink="/sys/list-dausach" routerLinkActive="active"
+            >Quản lý sách</a
+          >
+        </li>
+        <li>
+          <a routerLink="/sys/list-categories" routerLinkActive="active"
+            >Quản lý loại sách</a
+          >
+        </li>
+        <li>
+          <a routerLink="/sys/user-list/" routerLinkActive="active"
+            >Quản lý người dùng</a
+          >
+        </li>
+      </ul>
+      <!-- /NAV -->
+    </div>
+    <!-- /responsive-nav -->
+  </div>
+  <!-- /container -->
+</nav>
+<!-- /NAVIGATION -->

@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  a2m-sso:
+    image: a2m-sso
+    volumes:
+    - a2m:/u01/a2m
+    restart: always
+    ports:
+    - 8097:8097
+  a2m-back:
+    build: .
+    image:  a2m-back
+    volumes:
+    - a2m:/u01/a2m
+    restart: always
+    ports:
+    - 8096:8096
+volumes:
+  a2m:
+    driver: local

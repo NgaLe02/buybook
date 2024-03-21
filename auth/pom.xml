@@ -12,7 +12,7 @@
 	<groupId>com.a2m</groupId>
 	<artifactId>a2m-sso</artifactId>
 	<version>1.0</version>
-	<name>a2m-sso</name>
+	<name>ssolib</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>

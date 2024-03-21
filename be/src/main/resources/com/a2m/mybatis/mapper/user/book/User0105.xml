@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.a2m.back.dao.user.book.User0105DAO">
+	<select id="getAllByBookCode" parameterType="String" resultType="com.a2m.back.model.resp.EvaluationResponse">
+	select DG.EVALUATE_ID as evaluate_id,
+	DG.SACHMUON_ID as sachmuon_id,
+	DG.DATE_EVALUATE AS date_evaluate,
+	DG.STAR as star,
+	DG.CONTENT as content,
+	DG.USER_UID as user_uid
+	FROM DANHGIA  as DG
+	JOIN SACHMUON as SM
+	ON DG.SACHMUON_ID = SM.SACHMUON_ID
+	JOIN SACH AS S
+	ON S.BOOK_ID = SM.BOOK_ID
+	JOIN DAUSACH as DS
+	on DS.BOOK_CODE = S.BOOK_CODE
+	where DS.BOOK_CODE = #{bookCode};
+	</select>
+
+	<insert id="insert" parameterType="com.a2m.back.model.user.book.EvaluationDto" 
+	useGeneratedKeys="true" keyProperty="evaluate_id"  keyColumn="EVALUATE_ID">
+	insert into  DANHGIA(SACHMUON_ID, USER_UID, CONTENT, DATE_EVALUATE, STAR)
+	values  (#{sachmuon_id},
+	#{user_uid},
+	#{content},
+	now(),
+	#{star})
+	
+	<!-- <selectKey resultType="int" order="AFTER" keyProperty="evaluate_id">
+        SELECT LAST_INSERT_ID() as returnedId
+    </selectKey> -->
+	</insert>
+	
+	<update id='update' parameterType="com.a2m.back.model.user.book.EvaluationDto">
+	update DANHGIA
+	set 
+	CONTENT = #{content},
+	DATE_EVALUATE = now(),
+	STAR = #{star}
+	where EVALUATE_ID = #{evaluate_id}
+	</update>
+	
+	<select id="getEvaluateIdMax">
+	
+	SELECT MAX(EVALUATE_ID) AS MAX_EVALUATE_ID FROM DANHGIA;
+	
+	</select>
+	<update id='updateEvaluate' parameterType="int">
+	
+	update SACHMUON
+	set EVALUATE = #{status}
+	WHERE SACHMUON_ID = #{sachMuonId}
+	</update>
+	
+	<select id="getEvaluateOfBook" parameterType="String">
+	
+	select EVALUATE_ID as evaluate_id,
+	SACHMUON_ID as sachmuon_id,
+	DATE_EVALUATE AS date_evaluate,
+	STAR as star,
+	CONTENT as content,
+	USER_UID as user_uid
+	FROM DANHGIA
+	where SACHMUON_ID = #{sachMuonId}
+	</select>
+</mapper>

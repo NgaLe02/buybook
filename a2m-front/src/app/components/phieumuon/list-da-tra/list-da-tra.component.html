@@ -1,0 +1,136 @@
+<!-- Hiển thị danh sách phiếu mượn với status là " Đã trả " -->
+<div class="search">
+  <form>
+    <input
+      style="width: 300px"
+      class="form-control me-2"
+      type="search"
+      placeholder="Nhập tên tài khoản"
+      [(ngModel)]="username"
+      name="searchByUsername"
+    />
+  </form>
+  <button type="button" style="border: #ffffff; background-color: #ffffff">
+    <img
+      src="../../../../assets/img/search.png"
+      alt=""
+      style="width: 38px; height: 38px"
+      [routerLink]="['/sys/list-phieumuon/status/2']"
+      [queryParams]="{ page: 1, search: username }"
+    />
+  </button>
+</div>
+
+<div style="min-height: 786px">
+  <div
+    style="display: flex; background-color: antiquewhite"
+    class="shadow-sm p-3 mb-3 bg-body rounded"
+  >
+    <div class="form-check" style="width: 32%; margin: 0px">
+      <label
+        class="form-check-label"
+        for="flexCheckDefault"
+        style="font-size: large; font-weight: bold"
+      >
+        Thông tin
+      </label>
+    </div>
+    <p
+      scope="col"
+      style="width: 17%; text-align: center; font-weight: bold"
+      class="content-item"
+    >
+      Số lượng sách
+    </p>
+    <p
+      (click)="sortByBorrowDate()"
+      scope="col"
+      style="width: 17%; text-align: center; font-weight: bold"
+      class="content-item"
+    >
+      Ngày nhận &nbsp;<i class="fa fa-sort"></i>
+    </p>
+    <p
+      (click)="sortByReturnUpdateReal()"
+      scope="col"
+      style="width: 17%; text-align: center; font-weight: bold"
+      class="content-item"
+    >
+      Ngày trả &nbsp;<i class="fa fa-sort"></i>
+    </p>
+    <p
+      scope="col"
+      style="width: 17%; text-align: center; font-weight: bold"
+      class="content-item"
+    >
+      Thao tác
+    </p>
+  </div>
+  <div
+    class="content shadow mb-3 bg-body rounded"
+    *ngFor="
+      let item of list
+        | paginate
+          : {
+              itemsPerPage: tableSize,
+              currentPage: pageCurrent,
+              totalItems: maxPage
+            };
+      let i = index
+    "
+  >
+    <div class="item-table d-flex">
+      <div style="display: flex; width: 32%">
+        <div class="content-con1 d-flex p-2 bd-highlight">
+          <img src="../../../../assets/img/money.png" alt="" class="img-item" />
+          <div style="width: 95%; margin-top: auto; margin-bottom: auto">
+            <div class="d-flex">
+              <p class="info">{{ item.userInfo?.fullName }}</p>
+            </div>
+            <p class="info">{{ item.userInfo?.email }}</p>
+          </div>
+        </div>
+      </div>
+      <td class="content-item" style="width: 17%">{{ item.countBook }}</td>
+      <td class="content-item" style="width: 17%">
+        {{ item.borrowDateReal | date : "dd/MM/yyyy" }}
+      </td>
+      <td class="content-item" style="width: 17%; font-style: italic">
+        {{ item.returnUpdateReal | date : "dd/MM/yyyy" }}
+      </td>
+      <div class="content-item" style="width: 17%">
+        <a
+          [routerLink]="[
+            '/sys/list-phieumuon/chi-tiet-phieu-muon/',
+            item.idPhieuMuon
+          ]"
+          [queryParams]="{ status: item.status }"
+          class="wait_link"
+        >
+          <img
+            src="../../../../assets/img/i_image.png"
+            alt=""
+            class="img-info"
+          />
+          <span class="tooltiptext">Chi tiết phiếu</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="list.length === 0">
+    <p style="font-size: 18px; font-weight: 500; color: red; width: 600px">
+      Danh sách phiếu trống!!
+    </p>
+  </ng-container>
+</div>
+
+<div>
+  <pagination-controls
+    class="pagination"
+    style="justify-content: center; margin: 50px 0px"
+    previousLabel=""
+    nextLabel=""
+    (pageChange)="changePage($event)"
+  ></pagination-controls>
+</div>

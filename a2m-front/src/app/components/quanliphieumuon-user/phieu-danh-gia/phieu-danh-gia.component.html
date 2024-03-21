@@ -1,0 +1,87 @@
+<div class="modal-header">
+  <h4 class="modal-title" style="font-style: bold">Đánh giá sản phẩm</h4>
+  <!-- <button
+    type="button"
+    class="close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button> -->
+</div>
+<div class="modal-body" style="border: none">
+  <div class="evaulate">
+    <span>Chất lượng sản phẩm</span>
+    <div class="stars">
+      <ngx-star-rating
+        [(ngModel)]="eval.star"
+        [id]="'rating'"
+      ></ngx-star-rating>
+    </div>
+    <span style="margin-left: 10px"></span>
+  </div>
+  <div class="input-group mb-3" style="margin-top: 15px">
+    <div style="width: 100%" class="content">
+      <textarea
+        type="text"
+        class="form-control"
+        name="description"
+        [(ngModel)]="eval.content"
+        id="content"
+        rows="5"
+        aria-describedby="basic-addon3"
+      ></textarea>
+    </div>
+    <div class="files">
+      <div class="image-show" style="display: flex; margin-top: 10px">
+        <div *ngFor="let s of images; let i = index" style="margin-left: 3px">
+          <img
+            [src]="s.image"
+            alt="Image Preview"
+            class="img-book"
+            style="width: 50px; height: 50px; border: 1px solid #e0d4d2"
+          />
+          <a type="button" style="margin-top: 0px" (click)="removeFile(i)">
+            <i
+              class="fa fa-times-circle delete_icon"
+              style="color: red"
+              aria-hidden="true"
+            ></i>
+          </a>
+        </div>
+      </div>
+      <div
+        class="images"
+        style="border: 1px solid #e0d4d2; margin-top: 5px; padding: 10px"
+      >
+        <img
+          src="../../../../assets/img/camera.png"
+          style="width: 30px; height: 30px; margin-bottom: 10px"
+        />
+        <label style="padding-top: 5px; margin-left: 5px" for="selectedFile"
+          >Thêm hình ảnh</label
+        >
+        <input
+          type="file"
+          id="selectedFile"
+          name="selectedFile"
+          style="display: none"
+          accept="images/*"
+          (change)="onSelectFile($event)"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-outline-primary"
+    (click)="activeModal.close('Close click')"
+  >
+    Quay lại
+  </button>
+  <button type="button" class="btn btn-outline-success" (click)="onSave()">
+    Đánh giá
+  </button>
+</div>

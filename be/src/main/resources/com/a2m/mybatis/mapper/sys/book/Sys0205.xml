@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.a2m.back.dao.sys.book.Sys0205DAO">
+
+	<select id="getBookToStatistic" parameterType="String">
+		<bind name="pattern" value="book_id + '%'" />
+		select count(*) as numberOfBorrowing
+		from SACHMUON
+		where BOOK_ID like
+		#{pattern} and STATUS = 1
+		UNION ALL
+		SELECT count(*) as
+		numberOfTimesBorrowed
+		from SACHMUON
+		where
+		BOOK_ID like
+		#{pattern} and
+		(STATUS = 1 or STATUS = 2
+		or STATUS = 4)
+		UNION ALL
+		SELECT count(*) as
+		numberOfLost
+		from SACHMUON
+		where
+		BOOK_ID like
+		#{pattern} and STATUS = 4;
+	</select>
+
+	<select id="getUserToStatistic" parameterType="String">
+		select count(*) as
+		numberOfReturnLate
+		from PHIEUMUON
+		where USER_UID = #{userUid} and STATUS
+		= 4
+		UNION ALL
+		SELECT count(*) as numberOfBookLost
+		from SACHMUON AS SM
+		JOIN PHIEUMUON AS PM
+		ON
+		SM.ID_PHIEU_MUON = PM.ID_PHIEU_MUON
+		where
+		PM.USER_UID = #{userUid} AND
+		(SM.STATUS = 4)
+		UNION ALL
+		SELECT count(*) as
+		numberOfBookBorrowed
+		from SACHMUON AS SM
+		JOIN PHIEUMUON AS PM
+		ON
+		SM.ID_PHIEU_MUON = PM.ID_PHIEU_MUON
+		where PM.USER_UID = #{userUid} AND
+		(PM.STATUS = 1 or PM.STATUS = 2
+		or PM.STATUS = 4);
+	</select>
+
+	<select id="getBookBorrowedOfUserByUserUid"
+		parameterType="String"
+		resultType="com.a2m.back.model.resp.BookResponse">
+		select distinct(DS.BOOK_CODE) as bookCode,
+		DS.TITLE as
+		title, DS.PUBLISHER as publisher, DS.PRICE as price, DS.PAGES as
+		pages,
+		DS.DESCRIPTION as description, DS.STATUS as status, DS.AUTHOR as
+		author,
+		DS.CREATED_YEAR AS createdYear,
+		COUNT(*) AS
+		numberOfTimesBorrowedOfUser
+		from DAUSACH AS DS
+		JOIN SACH as S
+		ON
+		DS.BOOK_CODE = S.BOOK_CODE
+		JOIN SACHMUON AS SM
+		ON SM.BOOK_ID = S.BOOK_ID
+		JOIN PHIEUMUON AS PM
+		ON SM.ID_PHIEU_MUON = PM.ID_PHIEU_MUON
+		WHERE
+		PM.USER_UID = #{userUid} AND
+		(PM.STATUS = 1 or PM.STATUS = 2
+		or
+		PM.STATUS = 4)
+		AND
+		DS.TITLE LIKE CONCAT('%', #{search},
+		'%')
+		GROUP BY
+		DS.BOOK_CODE;
+	</select>
+
+	<select id="getNumberBookLostOfUser" parameterType="map">
+		select
+		COUNT(*) AS numberOfLostOfUser
+		FROM SACHMUON AS SM
+		JOIN PHIEUMUON AS PM
+		ON SM.ID_PHIEU_MUON = PM.ID_PHIEU_MUON
+		WHERE PM.USER_UID = #{userUid}
+		AND SM.STATUS = 0 and LEFT(SM.BOOK_ID, 8) = #{bookCode}
+	</select>
+
+	<select id="getUserBorrowOfBook" parameterType="map">
+		select
+		distinct(USER_UID)
+		from PHIEUMUON as PM
+		join SACHMUON as SM
+		on
+		SM.ID_PHIEU_MUON = PM.ID_PHIEU_MUON
+		join SACH as S
+		on S.BOOK_ID =
+		SM.BOOK_ID
+		join DAUSACH as DS
+		on DS.BOOK_CODE = S.BOOK_CODE
+		where
+		DS.BOOK_CODE = #{bookCode}
+		AND EBOOK = #{type}
+		AND (SM.STATUS = 1 OR
+		SM.STATUS = 2 or SM.STATUS = 4)
+
+	</select>
+
+	<select id="getUserBorrowOfBookToStatistic"
+		parameterType="String">
+		SELECT count(*) as numberOfBookLost
+		from SACHMUON AS SM
+		JOIN PHIEUMUON AS PM
+		ON SM.ID_PHIEU_MUON = PM.ID_PHIEU_MUON
+		join SACH AS
+		S
+		ON S.BOOK_ID = SM.BOOK_ID
+		JOIN DAUSACH AS DS
+		ON DS.BOOK_CODE =
+		S.BOOK_CODE
+		where
+		PM.USER_UID = #{userUid} AND
+		(SM.STATUS = 4)
+		AND
+		DS.BOOK_CODE = #{bookCode}
+
+		UNION ALL
+		SELECT count(*) as
+		numberOfBookBorrowed
+		from SACHMUON AS SM
+		JOIN
+		PHIEUMUON AS PM
+		ON
+		SM.ID_PHIEU_MUON = PM.ID_PHIEU_MUON
+		join SACH AS S
+		ON
+		S.BOOK_ID =
+		SM.BOOK_ID
+		JOIN DAUSACH AS DS
+		ON DS.BOOK_CODE = S.BOOK_CODE
+		where
+		PM.USER_UID = #{userUid} AND
+		(PM.STATUS = 1 or PM.STATUS = 2
+		or
+		PM.STATUS = 4) AND (SM.STATUS = 1 OR SM.STATUS = 2) and DS.BOOK_CODE =
+		#{bookCode};
+	</select>
+</mapper>

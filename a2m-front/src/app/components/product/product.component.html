@@ -1,0 +1,312 @@
+<div class="container">
+  <div class="content shadow-sm p-3 mb-3 bg-body rounded">
+    <div
+      class="d-flex"
+      style="align-items: center; justify-content: center; padding-bottom: 30px"
+    >
+      <div style="margin-right: auto; margin-left: auto">
+        <div
+          #container
+          style="text-align: center; width: 50%; margin-left: 10%"
+        >
+          <ng-image-slider
+            style="text-align: center; margin-left: 25%"
+            [images]="imageObjectPreview"
+            [showArrow]="false"
+            [arrowKeyMove]="false"
+            (imageClick)="onImageClick()"
+            [ligthboxShow]="false"
+            (lightboxClose)="closeImage()"
+            #nav2
+          >
+          </ng-image-slider>
+        </div>
+        <div
+          style="
+            width: 430px;
+            height: 100px;
+            text-align: center;
+            margin-bottom: 100px;
+            padding: 10px;
+          "
+        >
+          <ng-image-slider
+            #nav
+            class="image-book-title"
+            [images]="imageObject"
+            [imagePopup]="false"
+            [infinite]="false"
+            [autoSlide]="1"
+            [imageSize]="{ space: 3, height: '100px' }"
+            slideImage="1"
+            (imageClick)="imageClickHandler($event)"
+          ></ng-image-slider>
+        </div>
+      </div>
+
+      <!-- Product details -->
+      <div class="col-6 shadow-sm p-3 bg-body rounded" *ngIf="bookTitle">
+        <div class="product-details" style="display: block">
+          <h2 class="product-name">{{ bookTitle.title }}</h2>
+
+          <div class="stars">
+            <ngx-star-rating
+              [disabled]="true"
+              [ngModel]="bookTitle.rating"
+            ></ngx-star-rating>
+          </div>
+
+          <hr style="margin: 40px 5px" />
+
+          <div>
+            <ul class="d-flex category-book">
+              <li style="margin-right: 5px">Tác giả:</li>
+
+              <li>
+                <a
+                  style="cursor: pointer"
+                  (click)="navigateToHomeByAuthor(bookTitle.author!)"
+                  >{{ bookTitle.author }}</a
+                >
+              </li>
+            </ul>
+            <p class="product-info">Nhà xuất bản: {{ bookTitle.publisher }}</p>
+            <p class="product-info">
+              Năm xuất bản: {{ bookTitle.createdYear }}
+            </p>
+            <p class="product-info">Số trang: {{ bookTitle.pages }}</p>
+            <p class="product-price" *ngIf="!bookTitle.ebook">
+              Giá trị:
+              {{ bookTitle.price | currencySuffix : "VND" : "" : "1.0-0" }}
+            </p>
+            <p class="product-price" *ngIf="bookTitle.ebook">
+              Số lần truy cập:
+              {{ bookTitle.numberAccess }}
+            </p>
+          </div>
+
+          <ul class="d-flex category-book">
+            <li style="margin-right: 5px">Thể loại:</li>
+            <div
+              *ngFor="let item of bookTitle.genres; let last = last"
+              type="buton"
+            >
+              <li>
+                <a style="cursor: pointer" (click)="navigateToHome(item)"
+                  >{{ item.genre_name }}{{ !last ? " , " : "" }}&nbsp;</a
+                >
+              </li>
+            </div>
+          </ul>
+
+          <hr />
+
+          <div class="add-to-cart d-flex">
+            <div
+              class="action-book"
+              (click)="addBookToWaitList()"
+              *ngIf="!bookTitle.ebook"
+            >
+              <a type="button">
+                <img
+                  src="../../../../assets/img/notification.png"
+                  alt=""
+                  class="img-action"
+                />
+                Nhận thông báo
+              </a>
+            </div>
+            <div
+              *ngIf="!bookTitle.ebook"
+              class="action-book"
+              type="button"
+              (click)="addBookToCart()"
+              [ngClass]="{
+                'disabled-link': bookTitle && bookTitle.status === '0'
+              }"
+            >
+              <a>
+                <img
+                  src="../../../../assets/img/cart2.png"
+                  alt=""
+                  class="img-action"
+                />
+                Thêm vào giỏ hàng
+              </a>
+            </div>
+            <div
+              *ngIf="!bookTitle.ebook"
+              class="action-book"
+              type="button"
+              (click)="borrow()"
+              [ngClass]="{
+                'disabled-link': bookTitle && bookTitle.status === '0'
+              }"
+            >
+              <a>
+                <img
+                  src="../../../../assets/img/book.png"
+                  alt=""
+                  class="img-action"
+                />
+                Mượn ngay
+              </a>
+            </div>
+          </div>
+
+          <div class="add-to-cart d-flex" *ngIf="bookTitle.ebook">
+            <div class="action-book" (click)="onDownloadFile()">
+              <a type="button">
+                <img
+                  src="../../../../assets/img/download.png"
+                  alt=""
+                  class="img-action"
+                />
+                Tải sách
+              </a>
+            </div>
+
+            <div
+              *ngIf="bookTitle.ebook"
+              class="action-book"
+              routerLink="/home/book/ebook/{{ bookTitle.bookCode }}"
+            >
+              <a type="button">
+                <img
+                  src="../../../../assets/img/download.png"
+                  alt=""
+                  class="img-action"
+                />
+                Đọc online
+              </a>
+            </div>
+
+            <!-- <div class="action-book" (click)="showBookOnline($event)">
+              <a type="button">
+                <img
+                  src="../../../../assets/img/download.png"
+                  alt=""
+                  class="img-action"
+                />
+                Đọc online
+              </a>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; min-width: 100%">
+    <div class="des-book col-12 shadow p-3 bg-body rounded" *ngIf="bookTitle">
+      <ckeditor
+        class="form-control ck-editor"
+        name="description"
+        id="editor"
+        [(ngModel)]="bookTitle.description"
+        class="description"
+        style="max-width: 580px"
+        [editor]="Editor"
+        [disabled]="true"
+        [config]="editorConfig"
+      ></ckeditor>
+    </div>
+  </div>
+
+  <div style="min-width: 100%; margin-bottom: 50px" *ngIf="bookTitle">
+    <h2>Đánh giá sản phẩm</h2>
+    <div
+      class="des-book col-12 shadow p-3 bg-body rounded"
+      style="margin: 10px 0"
+      *ngFor="let e of bookTitle.eval; let i = index"
+    >
+      <div class="info-user" style="display: flex">
+        <a type="button" class="wait_link">
+          <img src="../../../../assets/img/money.png" alt="" class="img-item" />
+        </a>
+        <div
+          style="
+            width: 300px;
+            margin-left: 5%;
+            font-size: 13px;
+            display: inline-block;
+          "
+        >
+          <div>
+            <p class="info">{{ e.userInfo?.userId }}</p>
+          </div>
+          <div class="stars">
+            <ngx-star-rating
+              [disabled]="true"
+              [(ngModel)]="e.star"
+              [id]="'rating'"
+            ></ngx-star-rating>
+          </div>
+          <p class="info" style="margin-top: 0px">
+            {{ e.date_evaluate | date : "dd/MM/yyyy" }}
+          </p>
+        </div>
+      </div>
+      <div class="comment" style="margin-left: 13%">
+        {{ e.content }}
+      </div>
+
+      <div style="display: flex; margin-left: 12%">
+        <div *ngFor="let i of imageObjectEvaluate[i]">
+          <img style="height: 50px; width: 50px" [src]="i.image" />
+        </div>
+      </div>
+
+      <!-- <div
+        style="margin-left: 12%; margin-top: 5px"
+        *ngIf="imageObjectEvaluate[i].length > 0"
+      >
+        <ng-image-slider
+          #nav
+          [images]="imageObjectEvaluate[i]"
+          [infinite]="false"
+          [autoSlide]="1"
+          [imageSize]="{ space: 1, height: '50px', width: '50px' }"
+          slideImage="1"
+          class="custom-image-comment"
+        ></ng-image-slider>
+      </div> -->
+    </div>
+  </div>
+
+  <div>
+    <iframe
+      *ngIf="urlEbook"
+      [src]="urlEbook"
+      width="100%"
+      height="300"
+      webkitallowfullscreen
+      mozallowfullscreen
+      allowfullscreen
+    ></iframe>
+  </div>
+</div>
+
+<!-- <ng-container>
+  <div class="progress progress-modal">
+    <div
+      class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+      role="progressbar"
+      style="width: 100%"
+      aria-valuenow="100"
+      aria-valuemin="0"
+      aria-valuemax="100"
+    ></div>
+  </div>
+</ng-container>
+<ng-template>
+  <iframe
+    *ngIf="urlEbook"
+    [src]="urlEbook"
+    width="100%"
+    height="300"
+    webkitallowfullscreen
+    mozallowfullscreen
+    allowfullscreen
+  ></iframe>
+</ng-template> -->

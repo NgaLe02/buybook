@@ -182,8 +182,8 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public List<UserResponse> getListUserInfo(String status, String page) {
-		List<UserResponse> result = userDAO.getListUserInfo(status,(Integer.parseInt(page)-1) * 10);
+	public List<UserResponse> getListUserInfo(String status, String page, int size, String search) {
+		List<UserResponse> result = userDAO.getListUserInfo(status,(Integer.parseInt(page)-1) * size, size, search);
 		return result;
 	}
 
@@ -203,8 +203,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Integer getCountUser(String status) {
-		return userDAO.getCountUser(status);
+	public Integer getCountUser(String status, String search) {
+		return userDAO.getCountUser(status, search);
 	}
 
 	@Override
@@ -225,6 +225,17 @@ public class UserServiceImpl implements UserService {
 	public void activeUser(String USER_UID) throws Exception{
 		userDAO.activeUser(USER_UID);
 		commonServiceImpl.clearCacheUser(USER_UID);
+	}
+
+	@Override
+	public List<UserResponse> getAllUserInfo(int size, String page, String search) {
+		List<UserResponse> result = userDAO.getAllUserInfo(size, (Integer.parseInt(page)-1) * size, search);
+		return result;
+	}
+
+	public Integer getCountAllUser(String search) {
+		int result = userDAO.getCountAllUser(search);
+		return result;
 	}
 
 }

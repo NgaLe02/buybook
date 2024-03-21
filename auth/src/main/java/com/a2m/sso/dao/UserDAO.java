@@ -17,48 +17,52 @@ import com.a2m.sso.model.req.SignUpReq;
 
 @Mapper
 public interface UserDAO {
-    @Cacheable("user")
-    UserResponse getUserInfoByUserUid(String userUid);
+	@Cacheable("user")
+	UserResponse getUserInfoByUserUid(String userUid);
 
-    UserResponse getUserByUserId(String userId);
+	UserResponse getUserByUserId(String userId);
 
-    void updateUserInfoByUserUid(UserResponse user);
+	void updateUserInfoByUserUid(UserResponse user);
 
-    void insertUser(SignUpReq user);
+	void insertUser(SignUpReq user);
 
-    void insertUserInfo(SignUpReq user);
+	void insertUserInfo(SignUpReq user);
 
-    void insertUserDAO(SignUpReq user);
+	void insertUserDAO(SignUpReq user);
 
-    void updateStatusUser(String verifyKey); // dùng khi đăng ký
+	void updateStatusUser(String verifyKey); // dùng khi đăng ký
 
-    void diActiveUser(String USER_UID);
+	void diActiveUser(String USER_UID);
 
-    void activeUser(String USER_UID);
+	void activeUser(String USER_UID);
 
-    void updateVerifyKeyNull(String verifyKey);
+	void updateVerifyKeyNull(String verifyKey);
 
-    void updateVerifyKeyByUserId(Map<String, Object> params); // dùng khi quên mật khẩu, đăng ký
+	void updateVerifyKeyByUserId(Map<String, Object> params); // dùng khi quên mật khẩu, đăng ký
 
-    void updateExpiredKeyByUserId(Date expiredKey);
+	void updateExpiredKeyByUserId(Date expiredKey);
 
 //	void updateVerifyKeyByUserId();
 
-    boolean isEmailExists(String email);
+	boolean isEmailExists(String email);
 
-    boolean isUsernameExists(String user_id);
+	boolean isUsernameExists(String user_id);
 
-    boolean isActivate(String user_uid);
+	boolean isActivate(String user_uid);
 
-    void updatePasswordByVerifyKey(NewPassword newPassword);
+	void updatePasswordByVerifyKey(NewPassword newPassword);
 
-    boolean isExpiredKey(String verifyKey);
+	boolean isExpiredKey(String verifyKey);
 
-    List<UserResponse> getListUserInfo(String status, int ignore);
+	List<UserResponse> getListUserInfo(String status, int ignore, int size, String search);
 
-    void addUserCover(String imgFileName, Long userUid);
+	List<UserResponse> getAllUserInfo(int size, int ignore, String search);
 
-    List<UserResponse> searchByUserId(String USER_ID);
+	void addUserCover(String imgFileName, Long userUid);
 
-    Integer getCountUser(String status);
+	List<UserResponse> searchByUserId(String USER_ID);
+
+	Integer getCountUser(String status, String search);
+	
+	int getCountAllUser(String search);
 }
